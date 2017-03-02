@@ -103,7 +103,7 @@ class RepoStats:
         'behind': u'\u2B07',
         'staged': u'\u2714',
         'not_staged': u'\u270E',
-        'untracked': u'\u2753',
+        'untracked': u'\u2717',
         'conflicted': u'\u273C'
     }
 

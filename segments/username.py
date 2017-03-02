@@ -13,4 +13,11 @@ def add_username_segment(powerline):
     else:
         bgcolor = Color.USERNAME_BG
 
-    powerline.append(user_prompt, Color.USERNAME_FG, bgcolor)
+    if os.getenv('MY_ROM'):
+        userpro = ''
+        bgcolor = Color.USERNAME_ROOT_BG
+    else:
+        userpro = user_prompt
+        bgcolor = Color.USERNAME_BG
+
+    powerline.append(userpro, Color.USERNAME_FG, bgcolor)

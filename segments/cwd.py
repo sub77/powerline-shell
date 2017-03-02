@@ -10,8 +10,8 @@ def replace_home_dir(cwd):
         repo_home = os.getenv('HOME')
     if cwd.startswith(home):
         return '~' + cwd[len(home):]
-    if cwd.startswith(repo_home):
-        return '' + cwd[len('my_rom'):]
+    return '' + cwd[len('my_rom'):]
+    
     return cwd
 
 def split_path_into_names(cwd):
@@ -37,9 +37,8 @@ def maybe_shorten_name(powerline, name):
     name."""
     if powerline.args.cwd_max_dir_size:
         return name[:powerline.args.cwd_max_dir_size]
-    if powerline.args.cwd_max_dir_size_repo:
-        return name[:powerline.args.cwd_max_dir_size_repo]
     return name
+
 
 def get_fg_bg(name):
     """Returns the foreground and background color to use for the given name.
@@ -84,7 +83,6 @@ def add_cwd_segment(powerline):
 
         separator = powerline.separator_thin
         separator_fg = Color.SEPARATOR_FG
-        #is_last_dir = (i == 2)
         is_last_dir = (i == len(names) - 1)
         if requires_special_home_display(name) or is_last_dir:
             separator = None

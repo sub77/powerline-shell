@@ -2,13 +2,30 @@ import os
 
 ELLIPSIS = u'\u2026'
 
-
 def replace_home_dir(cwd):
     home = os.getenv('HOME')
     if cwd.startswith(home):
         return '~' + cwd[len(home):]
     return cwd
 
+def replace_roms_dir(cwd):
+    roms = os.getenv('REPO_HOME')
+    if not roms:
+        #print("Environment variable: [%s] not set." % (envVar))
+        #sys.exit(1)
+        roms = os.getenv('HOME')
+    #retValue = tmpVal.strip("'") 
+    #roms = retValue
+    #repo_home = os.getenv('REPO_HOME')
+    #if repo_home is not None:
+    #    return repo_home
+    #else
+        #repo_home = os.getenv('HOME')
+        #return repo_home
+    #roms = repo_home
+    if cwd.startswith(roms):
+        return 'repo' + cwd[len(roms):]
+    return cwd
 
 def split_path_into_names(cwd):
     names = cwd.split(os.sep)
@@ -27,6 +44,10 @@ def requires_special_home_display(name):
     the chosen theme should use a special home indicator display."""
     return (name == '~' and Color.HOME_SPECIAL_DISPLAY)
 
+def requires_special_roms_display(name):
+    """Returns true if the given directory name matches the home indicator and
+    the chosen theme should use a special home indicator display."""
+    return (name == 'repo' and Color.HOME_SPECIAL_DISPLAY)
 
 def maybe_shorten_name(powerline, name):
     """If the user has asked for each directory name to be shortened, will
@@ -44,12 +65,16 @@ def get_fg_bg(name):
         return (Color.HOME_FG, Color.HOME_BG,)
     return (Color.PATH_FG, Color.PATH_BG,)
 
+    if requires_special_roms_display(name):
+        return (Color.HOME_FG, Color.HOME_BG,)
+    return (Color.PATH_FG, Color.PATH_BG,)
 
 def add_cwd_segment(powerline):
     cwd = powerline.cwd or os.getenv('PWD')
     if not py3:
         cwd = cwd.decode("utf-8")
     cwd = replace_home_dir(cwd)
+    cwd = replace_roms_dir(cwd)
 
     if powerline.args.cwd_mode == 'plain':
         powerline.append(' %s ' % (cwd,), Color.CWD_FG, Color.PATH_BG)
@@ -82,7 +107,7 @@ def add_cwd_segment(powerline):
         separator = powerline.separator_thin
         separator_fg = Color.SEPARATOR_FG
         is_last_dir = (i == len(names) - 1)
-        if requires_special_home_display(name) or is_last_dir:
+        if requires_special_home_display(name) or requires_special_roms_display(name) or is_last_dir:
             separator = None
             separator_fg = None
 
